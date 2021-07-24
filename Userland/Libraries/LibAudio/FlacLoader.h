@@ -6,38 +6,12 @@
 
 #pragma once
 
+#include "PluginCommon.h"
 #include "Buffer.h"
 #include "FlacTypes.h"
 #include "Loader.h"
-#include <AK/BitStream.h>
-#include <AK/Stream.h>
-#include <AK/Types.h>
-#include <AK/Variant.h>
-#include <LibCore/FileStream.h>
 
 namespace Audio {
-
-class FlacInputStream : public Variant<Core::InputFileStream, InputMemoryStream> {
-
-public:
-    using Variant<Core::InputFileStream, InputMemoryStream>::Variant;
-
-    void seek(size_t pos)
-    {
-        this->visit(
-            [&](auto& stream) {
-                stream.seek(pos);
-            });
-    }
-
-    InputBitStream bit_stream()
-    {
-        return this->visit(
-            [&](auto& stream) {
-                return InputBitStream(stream);
-            });
-    }
-};
 
 ALWAYS_INLINE u8 frame_channel_type_to_channel_count(FlacFrameChannelType channel_type);
 // Sign-extend an arbitrary-size signed number to 64 bit signed
@@ -122,7 +96,7 @@ private:
 
     // keep track of the start of the data in the FLAC stream to seek back more easily
     u64 m_data_start_location { 0 };
-    OwnPtr<FlacInputStream> m_stream;
+    OwnPtr<AudioInputStream> m_stream;
     Optional<FlacFrameHeader> m_current_frame;
     Vector<Frame> m_current_frame_data;
     u64 m_current_sample_or_frame { 0 };

@@ -31,7 +31,7 @@ FlacLoaderPlugin::FlacLoaderPlugin(const StringView& path)
     if (!m_valid)
         return;
 
-    m_stream = make<FlacInputStream>(Core::InputFileStream(*m_file));
+    m_stream = make<AudioInputStream>(Core::InputFileStream(*m_file));
     reset();
 
     m_resampler = make<ResampleHelper<double>>(m_sample_rate, 44100);
@@ -39,7 +39,7 @@ FlacLoaderPlugin::FlacLoaderPlugin(const StringView& path)
 
 FlacLoaderPlugin::FlacLoaderPlugin(const ByteBuffer& buffer)
 {
-    m_stream = make<FlacInputStream>(InputMemoryStream(buffer));
+    m_stream = make<AudioInputStream>(InputMemoryStream(buffer));
     if (!m_stream) {
         m_error_string = String::formatted("Can't open memory stream");
         return;
@@ -549,7 +549,6 @@ FlacSubframeHeader FlacLoaderPlugin::next_subframe_header(InputBitStream& bit_st
     u8 k = 0;
     if (has_wasted_bits) {
         bool current_k_bit = 0;
-        u8 k = 0;
         do {
             current_k_bit = bit_stream.read_bit_big_endian();
             ++k;

@@ -5,6 +5,7 @@
  */
 
 #include <LibAudio/FlacLoader.h>
+#include <LibAudio/Mp3Loader.h>
 #include <LibAudio/WavLoader.h>
 
 namespace Audio {
@@ -17,6 +18,9 @@ Loader::Loader(const StringView& path)
     m_plugin = make<FlacLoaderPlugin>(path);
     if (m_plugin->sniff())
         return;
+    m_plugin = make<Mp3LoaderPlugin>(path);
+    if (m_plugin->sniff())
+        return;
     m_plugin = nullptr;
 }
 
@@ -26,8 +30,11 @@ Loader::Loader(const ByteBuffer& buffer)
     if (m_plugin->sniff())
         return;
     m_plugin = make<FlacLoaderPlugin>(buffer);
+    if (m_plugin->sniff())
+        return;
+    m_plugin = make<Mp3LoaderPlugin>(buffer);
     if (m_plugin->sniff()) {
-        dbgln("FLAC sniff successful");
+        dbgln("Mp3 sniff successful");
         return;
     }
     m_plugin = nullptr;
