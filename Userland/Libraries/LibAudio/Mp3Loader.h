@@ -54,6 +54,7 @@ private:
     void decode_v2();
     void decode_scale_factor(int gr,int ch);
     void decode_huffman_code(int gr,int ch);
+    Vector<i32> convert_current_mp3frame_to_samples();
 
     const int mix_partition_table[6][3][4] = {
         {{ 6,  5, 5, 5}, {3, 3, 3, 3}, {6, 3, 3, 3}},
@@ -72,5 +73,6 @@ private:
     String m_error_string;
     PcmSampleFormat m_sample_format;
     bool m_valid { false };
+    Vector<i32> samples_cache;
 };
 }

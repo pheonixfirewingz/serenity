@@ -88,6 +88,8 @@ bool Mp3LoaderPlugin::decode_frame()
 
     decode_side_info();
     decode_frame_data();
+    auto samples = convert_current_mp3frame_to_samples();
+    samples_cache.extend(samples);
     return true;
 }
 
@@ -284,6 +286,11 @@ void Mp3LoaderPlugin::decode_huffman_code(int gr, int ch)
     (void)gr;
     (void)ch;
     TODO();
+}
+
+Vector<i32> Mp3LoaderPlugin::convert_current_mp3frame_to_samples()
+{
+    return Vector<i32>();
 }
 
 };
